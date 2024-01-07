@@ -1,0 +1,27 @@
+{
+  "name": "mongosbank",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bank.js",
+  "type": "module",
+  "scripts": {
+    "dev-server": "node --watch bank.js",
+    "start-server": "node bank.js",
+    "dev-client": "cd client && npm run dev",
+    "start-client": "cd client && npm start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongodb": "^6.3.0",
+    "mongoose": "^8.0.3",
+    "rollup": "^4.9.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
