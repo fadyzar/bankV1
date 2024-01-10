@@ -16,41 +16,70 @@ const UserData = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get('http://localhost:3000/api/v1/users')
+        axios.get('https://bankserver23.onrender.com/api/v1/users')
             .then(response => {
                 setData(response.data);
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
             });
-    }, []);
+    }, [data]);
 
     const handleDeleteUser = async (userId) => {
-        console.log(`user ID = ${userId}`)
+        console.log(`user ID = ${userId}`);
+    
+        // Check if userId is defined
+        if (!userId) {
+            console.error('Error: userId is undefined');
+            return;
+        }
+    
         try {
+            // Send a request to delete the user
             await deleteUser(userId);
-
-            // Update state by filtering out the deleted user
+    
+            // const newData = data;
+            // if (newData[userId]) {
+            //     delete newData[userId];
+            // }
+            // setData("dgdgd");
+            // Update state to trigger re-render
             setData(prevData => {
                 const newData = { ...prevData };
-                delete newData[userId];
+                if (newData[userId]) {
+                    delete newData[userId];
+                }
                 return newData;
             });
+            // window.location.reload();
         } catch (error) {
             console.error('Error deleting user:', error);
         }
     };
-
+    
+    
+    
     const handleAddUser = async () => {
         try {
-            const response = await createUser(newUser);
-
+            // Check if newUser has the required properties
+            if (!newUser.name || !newUser.email || newUser.cash === undefined || newUser.creditAmount === undefined || newUser.creditLimit === undefined) {
+                console.error('Error: Missing required user information');
+                alert('Missing required user information')
+                return;
+            }
+    
+            // Make a POST request to create a new user
+            const response = await axios.post('https://bankserver23.onrender.com/api/v1/users', newUser);
+    
+            // Handle success, update UI, etc.
+            console.log('User created successfully:', response.data);
+    
             // Update state with the new user
             setData(prevData => ({
                 ...prevData,
                 [response.data._id]: response.data,
             }));
-
+    
             // Reset the newUser state
             setNewUser({
                 name: '',
@@ -63,14 +92,48 @@ const UserData = () => {
             console.error('Error adding user:', error);
         }
     };
+    
+    
+    
+const handleChangeName = (e) => {
+    const { name, value } = e.target;
+    setNewUser((prevUser) => ({
+        ...prevUser,
+        [name]: value,
+    }));
+};
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setNewUser((prevUser) => ({
-            ...prevUser,
-            [name]: value,
-        }));
-    };
+const handleChangeEmail = (e) => {
+    const { name, value } = e.target;
+    setNewUser((prevUser) => ({
+        ...prevUser,
+        [name]: value,
+    }));
+};
+
+const handleChangeCash = (e) => {
+    const { name, value } = e.target;
+    setNewUser((prevUser) => ({
+        ...prevUser,
+        [name]: value,
+    }));
+};
+
+const handleChangeCreditAmount = (e) => {
+    const { name, value } = e.target;
+    setNewUser((prevUser) => ({
+        ...prevUser,
+        [name]: value,
+    }));
+};
+
+const handleChangeCreditLimit = (e) => {
+    const { name, value } = e.target;
+    setNewUser((prevUser) => ({
+        ...prevUser,
+        [name]: value,
+    }));
+};
 
     return (
         <div className='admin-page page'>
@@ -111,11 +174,25 @@ const UserData = () => {
             <div>
                 <h2>Add User</h2>
                 <form>
-                    <label>Name:</label>
-                    <input type="text" name="name" value={newUser.name} onChange={handleChange} />
-                    {/* ... Other input fields ... */}
-                    <button type="button" onClick={handleAddUser}>Add User</button>
-                </form>
+    <label>Name:</label>
+    <input type="text" name="name" value={newUser.name} onChange={handleChangeName} />
+    
+    <label>Email:</label>
+    <input type="email" name="email" value={newUser.email} placeholder='example@test.com' onChange={handleChangeEmail} required />
+        <br />
+    <label>Cash:</label>
+    <input type="number" name="cash" min="1" max="10000000" value={newUser.cash} onChange={handleChangeCash} />
+
+    <label>Credit Amount:</label>
+    <input type="number" name="creditAmount" min="1" max="10000000" value={newUser.creditAmount} onChange={handleChangeCreditAmount} />
+
+    <label>Credit Limit:</label>
+    <input type="number" name="creditLimit" min="1" max="10000000" value={newUser.creditLimit} onChange={handleChangeCreditLimit} />
+
+    <button type="button" onClick={handleAddUser}>Add User</button>
+</form>
+
+          
             </div>
         </div>
     );

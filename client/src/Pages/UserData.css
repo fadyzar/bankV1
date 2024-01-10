@@ -24,3 +24,11 @@ table {
   tr:hover{
     background-color: #FAEBD7 ;
   }
+
+  label{
+    margin: 10px;
+  }
+
+  button{
+    margin: 10px;
+  }
